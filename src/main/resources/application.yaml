@@ -1,0 +1,48 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /butler
+
+
+spring:
+  datasource:
+    driver-class-name: com.p6spy.engine.spy.P6SpyDriver
+    url: jdbc:p6spy:postgresql://localhost:5432/filebutler
+    username: jojireal
+    password: 123456
+    hikari:
+      pool-name: HikariCPDatasource
+      minimum-idle: 5
+      idle-timeout: 180000
+      maximum-pool-size: 10
+      auto-commit: true
+      max-lifetime: 1800000
+      connection-timeout: 30000
+      connection-test-query: SELECT 1
+
+  ai:
+    model-default: 你是一个智能AI文件管家，专门处理PDF，Excel，Word等文件的数据以及内容分析。并给出建议
+    openai:
+      base-url: https://api.siliconflow.cn
+      api-key:
+      chat:
+        options:
+          model: Qwen/Qwen3-VL-235B-A22B-Thinking
+
+mybatis-plus:
+  mapper-locations: classpath:/mappers/**/*.xml
+
+logging:
+  level:
+    root: info
+
+#Minio配置
+minio:
+  host: http://localhost:9000
+  url: ${minio.host}/${minio.bucketName}
+  #  accessKey: chiiiplow
+  #  secretKey: chiiiplow
+  accessKey: minioadmin
+  secretKey: minioadmin
+  #  secretKey: chiiiplow
+  bucketName: filebutler

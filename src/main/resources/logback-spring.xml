@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="10 minutes">
+
+    <!-- 控制台输出 -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss, GMT+8} %highlight(%-5level)[%logger{36}] [thread:%t][line:%L][traceId:%X{traceId}] -> %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- 从 Spring 环境读取配置属性 -->
+    <springProperty scope="context" name="LOG_PATH" source="logging.file.path" defaultValue="./logs"/>
+    <springProperty scope="context" name="LOG_NAME" source="logging.file.name" defaultValue="chiiiplow.log"/>
+    <springProperty scope="context" name="ROOT_LEVEL" source="logging.level.root" defaultValue="INFO"/>
+
+    <!-- 滚动文件输出 -->
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PATH}/${LOG_NAME}</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!-- 每天一个目录，文件按大小分片 -->
+            <fileNamePattern>./logs/chiiiplow.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <!-- 单个文件最大 10MB -->
+            <maxFileSize>10MB</maxFileSize>
+            <!-- 保留 30 天日志 -->
+            <maxHistory>30</maxHistory>
+            <!-- 总日志文件大小上限，可选 -->
+            <totalSizeCap>1GB</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss, GMT+8} %-5level[%logger{36}] [thread:%t][line:%L][traceId:%X{traceId}] -> %msg%n</pattern>
+        </encoder>
+        <append>true</append>
+        <prudent>false</prudent>
+    </appender>
+
+    <!-- 关闭某些无用日志 -->
+    <logger name="org.springframework.boot.autoconfigure.logging.ConditionEvaluationReportLoggingListener" level="OFF"/>
+    <logger name="org.springframework" level="WARN"/>
+    <logger name="org.mybatis" level="WARN"/>
+    <logger name="com.zaxxer.hikari" level="WARN"/>
+    <logger name="com.p6spy" level="INFO"/>
+    <!-- 根日志级别 -->
+    <root level="${ROOT_LEVEL}">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="FILE" />
+    </root>
+
+</configuration>
