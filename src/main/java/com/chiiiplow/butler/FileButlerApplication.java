@@ -10,7 +10,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @author yangzhixiong
  * @date 2025/10/11
  */
-@MapperScan(basePackages = "com.chiiiplow.butler.mapper.**")
+@MapperScan(basePackages = "com.chiiiplow.butler.mapper")
 @SpringBootApplication(scanBasePackages = "com.chiiiplow.butler")
 public class FileButlerApplication {
 

@@ -1,5 +1,6 @@
 package com.chiiiplow.butler.interceptor;
 
+import com.chiiiplow.butler.utils.TraceIdUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.MDC;
@@ -17,17 +18,15 @@ import java.util.UUID;
 @Component
 public class LogTraceInterceptor implements HandlerInterceptor {
 
-    private static final String TRACE_ID_KEY = "traceId";
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        String traceId = UUID.randomUUID().toString().replace("-", "").substring(0, 16);
-        org.jboss.logging.MDC.put(TRACE_ID_KEY, traceId);
+        TraceIdUtils.set();
         return true;
     }
 
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
-        MDC.clear();
+        TraceIdUtils.remove();
     }
 }
